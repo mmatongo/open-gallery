@@ -1,5 +1,5 @@
 {
-    "name": "open-gallery",
+    "name": "@mmatongo/open-gallery",
     "version": "0.1.0",
     "description": "A lightweight, easy-to-use web component for image galleries ported from.",
     "main": "dist/open-gallery.min.js",
