@@ -67,39 +67,6 @@ class OpenGallery extends HTMLElement {
           }
         }
 
-        [data-page-type="photos"] {
-          header, main, footer {
-            max-width: 100%;
-          }
-
-          input {
-            position: absolute;
-            left: -100px;
-
-            &:checked + label path {
-              fill: var(--activeColor);
-            }
-
-            &:focus + label {
-              outline: auto;
-              outline-color: var(--activeColor);
-            }
-          }
-
-          label {
-            top: -30px;
-            left: 100px;
-            padding: .5em;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-          }
-
-          label path {
-            fill: var(--logoColor);
-          }
-        }
-
         .photos-wrapper {
           &:focus { outline: none; }
           scroll-behavior: smooth;
@@ -170,8 +137,13 @@ class OpenGallery extends HTMLElement {
         figcaption {
           padding: .5em 1em;
 
+          font-size: 0.8em;
+          font-style: italic;
+          font-family: ui-monospace,sfmono-regular,sf mono,Menlo,Consolas,liberation mono,monospace;
+
           p {
             margin: 0;
+            font-size: 0.8em;
           }
         }
 
@@ -180,14 +152,6 @@ class OpenGallery extends HTMLElement {
           display: block;
           opacity: .3;
           animation: loading .5s infinite alternate;
-
-          [data-status-text]:empty {
-            display: inline-block;
-            width: 100px;
-            height: 1em;
-            border-radius: .3em;
-            background: var(--subtleBackgroundColor);
-          }
         }
 
         @media (max-height: 540px), (max-width: calc(100vh * 1.4)) {
@@ -229,25 +193,52 @@ class OpenGallery extends HTMLElement {
         }
 
         [value*=grid]:checked~.photos-wrapper .figure-landscape {
-            grid-column: span 2
+          grid-column: span 2
         }
 
         [value*=grid]:checked~.photos-wrapper figure {
-            margin-bottom: 0;
-            align-self: start
+          margin-bottom: 0;
+          align-self: start
         }
 
         [value*=grid]:checked~.photos-wrapper img {
-            max-height: none;
-            height: auto;
+          max-height: none;
+          height: auto;
         }
 
         [value=grid3fr]:checked~.photos-wrapper {
-            grid-template-columns: repeat(3,1fr)
+          grid-template-columns: repeat(3,1fr)
         }
 
         [value=grid3fr]:checked~.photos-wrapper .figure-landscape {
-            grid-column: span 3;
+          grid-column: span 3;
+        }
+
+        [name="layout"]:checked {
+          & + label path {
+            fill: #74d274;
+          }
+
+          &:focus + label {
+            outline: auto;
+            outline-color: #74d274;
+          }
+        }
+
+        [data-page-type="photos"] {
+          input {
+            position: absolute;
+            left: -100px;
+          }
+
+          label {
+            top: -30px;
+            left: 100px;
+            padding: .5em;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+          }
         }
       </style>
       <div>
@@ -303,11 +294,6 @@ class OpenGallery extends HTMLElement {
   onLayoutChange(event) {
     this.viewMode = event.target.value;
     localStorage.setItem('galleryViewMode', this.viewMode);
-    this.applyLayout();
-  }
-
-  applyLayout() {
-    this.highlightCurrentViewMode();
   }
 
   fetchImages() {
@@ -347,6 +333,9 @@ class OpenGallery extends HTMLElement {
 
       const caption = document.createElement('figcaption');
       caption.textContent = image._open_gallery.caption;
+      const date = document.createElement('p');
+      date.textContent = `(${image._open_gallery.date})`;
+      caption.appendChild(date);
 
       figure.appendChild(img);
 
@@ -354,7 +343,6 @@ class OpenGallery extends HTMLElement {
         figure.classList.add(image._open_gallery.class);
       }
 
-      figure.classList.add(image._open_gallery.class);
       figure.appendChild(caption);
 
       this.imageContainer.appendChild(figure);
@@ -365,20 +353,6 @@ class OpenGallery extends HTMLElement {
     }
   }
 
-  highlightCurrentViewMode() {
-    const layoutInputs = this.shadowRoot.querySelectorAll(
-      'input[name="layout"]'
-    );
-    layoutInputs.forEach((input) => {
-      const label = this.shadowRoot.querySelector(`label[for="${input.id}"]`);
-      if (input.value === this.viewMode) {
-        label.classList.add('active');
-      } else {
-        label.classList.remove('active');
-      }
-    });
-  }
-
   applySavedViewMode() {
     const radioButton = this.shadowRoot.querySelector(
       `input[value="${this.viewMode}"]`
@@ -386,7 +360,6 @@ class OpenGallery extends HTMLElement {
     if (radioButton) {
       radioButton.checked = true;
     }
-    this.applyLayout();
   }
 }
 
