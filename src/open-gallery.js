@@ -335,8 +335,14 @@ class OpenGallery extends HTMLElement {
       caption.textContent = image._open_gallery.caption;
       const date = document.createElement('p');
       date.textContent = `(${image._open_gallery.date})`;
-      caption.appendChild(date);
+      const details = document.createElement('p');
 
+      if (image._open_gallery._details) {
+        details.textContent = image._open_gallery._details;
+      }
+
+      caption.appendChild(date);
+      caption.appendChild(details);
       figure.appendChild(img);
 
       if (image._open_gallery.class) {
