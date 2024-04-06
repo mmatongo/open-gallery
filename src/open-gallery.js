@@ -54,6 +54,7 @@ class OpenGallery extends HTMLElement {
             max-height: calc(100vh - 6em);
             background-color: var(--photoBackground);
             display: block;
+            aspect-ratio: 16 / 9;
           }
 
           .image-link {
@@ -320,12 +321,13 @@ class OpenGallery extends HTMLElement {
   renderImages() {
     this.imageContainer.innerHTML = '';
 
-    this.images.forEach((image) => {
+    this.images.forEach((image, index) => {
       const figure = document.createElement('figure');
       const img = document.createElement('img');
       img.src = image._open_gallery.url;
       img.href = image._open_gallery.url;
       img.alt = image._open_gallery.alt;
+      img.loading = this.isFirstImage(index) ? 'eager' : 'lazy';
 
       img.addEventListener('click', () => {
         window.open(img.href, '_blank');
@@ -357,6 +359,10 @@ class OpenGallery extends HTMLElement {
     if (window.innerWidth < 768) {
       this.viewMode = 'y-scroll';
     }
+  }
+
+  isFirstImage(index) {
+    return index === 0;
   }
 
   applySavedViewMode() {
