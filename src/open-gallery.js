@@ -54,7 +54,6 @@ class OpenGallery extends HTMLElement {
             max-height: calc(100vh - 6em);
             background-color: var(--photoBackground);
             display: block;
-            aspect-ratio: 16 / 9;
           }
 
           .image-link {
@@ -349,6 +348,9 @@ class OpenGallery extends HTMLElement {
 
       if (image._open_gallery.class) {
         figure.classList.add(image._open_gallery.class);
+        img.style.aspectRatio = '1.5 / 0';
+      } else {
+        img.style.aspectRatio = '0.667 / 0';
       }
 
       figure.appendChild(caption);
